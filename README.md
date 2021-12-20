@@ -5,8 +5,10 @@
 ### To Build the Project
 
 * docker-compose up -d --build (Dev build)
+* Access at http://localhost:5000 (Dev build)
+
 * docker-compose -f docker-compose.prod.yml up -d --build (Production build)
-* Access at http://localhost:5000
+* Access at http://localhost:9000 (Production NGinx reverse proxy)
 
 ### To destroy project and volumes
 
