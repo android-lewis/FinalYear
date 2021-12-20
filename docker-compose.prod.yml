@@ -13,12 +13,28 @@ services:
       - ./.env.prod
     depends_on:
       - db
+    networks:
+      finalyear-network:
+        aliases:
+          - backend
   db:
     image: postgres:13-alpine
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
     env_file:
       - ./.env.prod.db
+    networks:
+      finalyear-network:
+        aliases:
+          - db
+  vue:
+    build: ./services/frontend/finalyear-client
+    volumes:
+      - media_volume:/home/app/web/src/images
+    networks:
+      finalyear-network:
+        aliases:
+          - frontend
   nginx:
     build: ./services/nginx
     volumes:
@@ -28,7 +44,15 @@ services:
       - 9000:80
     depends_on:
       - web
+      - vue
+    networks:
+      finalyear-network:
+        aliases:
+          - proxy
 volumes:
   postgres_data_prod:
   static_volume:
   media_volume:
+
+networks:
+   finalyear-network:
