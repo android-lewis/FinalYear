@@ -12,7 +12,8 @@
 
 ### To destroy project and volumes
 
-* docker-compose down -v
+* docker-compose -f docker-compose.yml down -v (Dev build)
+* docker-compose -f docker-compose.prod.yml down -v (Production build)
 
 ### To Inspect DB
 
