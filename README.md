@@ -8,7 +8,9 @@
 * Access at http://localhost:5000 (Dev build)
 
 * docker-compose -f docker-compose.prod.yml up -d --build (Production build)
-* Access at http://localhost:9000 (Production NGinx reverse proxy)
+* docker-compose -f docker-compose.prod.yml exec web python manage.py create_db (Create DB tables (First time only))
+    * Access frontend at http://localhost:9000 (Production NGinx reverse proxy)
+    * Access backend at http://localhost:9000/api (Production NGinx reverse proxy)
 
 ### To destroy project and volumes
 
