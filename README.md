@@ -4,7 +4,7 @@
 
 ### To Build the Project
 
-* docker-compose up -d --build (Dev build)
+* docker-compose -f docker-compose.yml up -d --build (Dev build)
 * Access at http://localhost:5000 (Dev build)
 
 * docker-compose -f docker-compose.prod.yml up -d --build (Production build)
