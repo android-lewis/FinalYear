@@ -9,6 +9,10 @@ then
     done
 
     echo "PostgreSQL started"
+
+    python manage.py run
+
+    echo "App started"
 fi
 
 if [ "$FLASK_ENV" = "development" ]

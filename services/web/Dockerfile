@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.9.5-slim-buster
+FROM python:3.10.1-bullseye
 
 # create dir for app user
 RUN mkdir -p /home/app

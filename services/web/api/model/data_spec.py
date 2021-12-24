@@ -1,22 +1,9 @@
-from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from sqlalchemy.dialects.postgresql import UUID
-from flask import (
-    Flask,
-    jsonify,
-    send_from_directory,
-    request,
-    redirect,
-    url_for
-)
-
-import os
 import uuid
-
-app = Flask(__name__)
-app.config.from_object("src.config.Config")
-db = SQLAlchemy(app)
+from .. import db
 
 class User(db.Model):
     __tablename__ = "users"
@@ -69,29 +56,3 @@ class LikedImage(db.Model):
     like_id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     image_id = db.Column(UUID(as_uuid=True), db.ForeignKey('image.image_id'))
-
-@app.route("/")
-def hello_world():
-    return jsonify(hello="world")
-
-@app.route("/static/<path:filename>")
-def staticfiles(filename):
-    return send_from_directory(app.config["STATIC_FOLDER"], filename)
-
-@app.route("/images/<path:filename>")
-def imagefiles(filename):
-    return send_from_directory(app.config["MEDIA_FOLDER"], filename)
-
-@app.route("/upload", methods=["GET", "POST"])
-def upload_file():
-    if request.method == "POST":
-        file = request.files["file"]
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
-    return """
-    <!doctype html>
-    <title>upload new File</title>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file><input type=submit value=Upload>
-    </form>
-    """
