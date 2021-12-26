@@ -2,14 +2,15 @@ from flask.cli import FlaskGroup
 from api import create_app, db
 import unittest
 
-app = create_app("api.config.Config")
+app = create_app()
 cli = FlaskGroup(app)
 
 @cli.command("create_db")
 def create_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        db.session.commit()
 
 @cli.command("run")
 def run():
@@ -17,7 +18,7 @@ def run():
 
 @cli.command("test")
 def test():
-    """Runs the unit tests."""
+    """Run unit tests."""
     tests = unittest.TestLoader().discover('web/test', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     
