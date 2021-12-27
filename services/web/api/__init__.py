@@ -1,16 +1,25 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import import_string
 from flask import Flask
 
-import os
-import uuid
+import logging
 
 db = SQLAlchemy()
 
-def create_app():
+def create_app(config_string='api.config.Config'):
     app = Flask(__name__)
-    app.config.from_object("api.config.Config")
+
+    # App config loading
+    cfg = import_string(str(config_string))()
+    app.config.from_object(cfg)
+
+    # Logging config
+    logging.basicConfig(filename='api/logs/record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+    
+    # Initialise our DB
     db.init_app(app)
-    #app.register_blueprint(test_page, url_prefix='/test')
+
+    # Register blueprint routes
     from api.route.image import image
     app.register_blueprint(image, url_prefix='/image')
     
