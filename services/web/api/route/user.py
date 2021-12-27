@@ -1,10 +1,7 @@
 from flask import (
     Blueprint,
     jsonify,
-    send_from_directory,
     request,
-    redirect,
-    url_for,
     current_app
 )
 
@@ -13,26 +10,26 @@ from .. import db
 
 import uuid
 
-user = Blueprint('user', __name__, template_folder='route')
+user = Blueprint('user', __name__)
 
-@user.route("/GetAllUsers")
+@user.route("/")
 def GetAllUsers():
     return jsonify(message="Serving all users", value=User.query.all()), 200
 
-@user.route("/GetUser", methods=["POST"])
+@user.route("/get", methods=["POST"])
 def GetUser():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
     user_id = data['user_id']
     current_app.logger.debug(data)
     return jsonify(message=f"Returing user with ID {user_id}", value=User.query.filter_by(user_id=user_id).first()), 200
 
-@user.route("/ModifyUser", methods=["POST"])
+@user.route("/modify", methods=["POST"])
 def ModifyUser():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
     user_id = data["user_id"] if "user_id" in data else 0
@@ -60,9 +57,14 @@ def ModifyUser():
 @user.route("/login", methods=["POST"])
 def login():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
+    keys = ['email', 'password']
+
+    if not all(key in data for key in keys):
+        return jsonify(message="Please supply all required fields"), 422
+    
     email = data['email']
     password = data['password']
     user = User.query.filter_by(email=email).first()
@@ -74,10 +76,14 @@ def login():
 @user.route("/register", methods=["POST"])
 def register():
     if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+        return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
+    keys = ['f_name', 'l_name', 'email', 'password']
 
+    if not all(key in data for key in keys):
+        return jsonify(message="Please supply all required fields"), 422
+    
     fName = data['f_name']
     lName = data['l_name']
     email = data['email']

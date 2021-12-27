@@ -66,7 +66,8 @@ class Image(db.Model):
     description = db.Column(db.String(255))
     likes = db.relationship('LikedImage', backref="likes_on_image", lazy=True)
 
-    def __init__(self, owner_id, file_location, name):
+    def __init__(self, image_id, owner_id, file_location, name):
+        self.image_id = image_id
         self.owner_id = owner_id
         self.file_location = file_location
         self.name = name

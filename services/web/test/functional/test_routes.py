@@ -5,5 +5,5 @@ def test_home_page_with_fixture(test_client):
     WHEN the '/' page is requested (GET)
     THEN check that the response is valid
     """
-    response = test_client.get('/user/GetAllUsers')
+    response = test_client.get('/user/')
     assert response.status_code == 200

@@ -12,7 +12,8 @@ def create_app(config_string='api.config.Config'):
     # App config loading
     cfg = import_string(str(config_string))()
     app.config.from_object(cfg)
-
+    app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
+    app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
     # Logging config
     logging.basicConfig(filename='api/logs/record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
     

@@ -21,9 +21,7 @@ def hello_world():
 def staticfiles(filename):
     return send_from_directory(test_page.config["STATIC_FOLDER"], filename)
 
-@test_page.route("/images/<path:filename>")
-def imagefiles(filename):
-    return send_from_directory(test_page.config["MEDIA_FOLDER"], filename)
+
 
 @test_page.route("/upload", methods=["GET", "POST"])
 def upload_file():

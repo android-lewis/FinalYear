@@ -5,8 +5,8 @@ services:
     build: ./services/web
     command: gunicorn --bind 0.0.0.0:5000 manage:app
     volumes:
-      - static_volume:/home/app/web/src/static
-      - media_volume:/home/app/web/src/images
+      - static_volume:/home/app/web/api/static
+      - media_volume:/home/app/web/api/images
     expose:
       - 5000
     env_file:
@@ -30,7 +30,7 @@ services:
   vue:
     build: ./services/frontend/finalyear-client
     volumes:
-      - media_volume:/home/app/web/src/images
+      - media_volume:/home/app/web/api/images
     networks:
       finalyear-network:
         aliases:
@@ -38,8 +38,8 @@ services:
   nginx:
     build: ./services/nginx
     volumes:
-      - static_volume:/home/app/web/src/static
-      - media_volume:/home/app/web/src/images
+      - static_volume:/home/app/web/api/static
+      - media_volume:/home/app/web/api/images
     ports:
       - 9000:80
     depends_on:
