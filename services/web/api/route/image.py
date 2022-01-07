@@ -2,8 +2,7 @@ from flask import (
     Blueprint,
     jsonify,
     request,
-    current_app,
-    send_from_directory
+    current_app
 )
 from werkzeug.utils import secure_filename
 from api.model.data_spec import Image
