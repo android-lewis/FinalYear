@@ -1,30 +1,10 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
+  <nav class="w-screen max-h-100 flex justify-around mx-auto bg-zinc-900">
+    <div class="items-center lg:flex">
+      <div class="h-full p-6 hover:bg-zinc-600"><router-link to="/gallery" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/image-nav.svg" alt="Image Icon for Gallery Page"/></router-link></div>
+      <div class="h-full p-6 hover:bg-zinc-600"><router-link to="/" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/camera-nav.svg" alt="Camera Icon for Home Page"/></router-link></div>
+      <div class="h-full p-6 hover:bg-zinc-600"><router-link to="/account" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/user-nav.svg" alt="Image Icon for Gallery Page"/></router-link></div>
+    </div>
+  </nav>
   <router-view />
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
