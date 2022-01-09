@@ -58,8 +58,8 @@ export default class ImageContainer extends Vue {
         params: {
           'owner': '1'
         }
-      }).then(function(){
-            console.log('SUCCESS!!');
+      }).then(response => function() {
+            console.log(response.data);
         })
         .catch(function(){
           console.log('FAILURE!!');
