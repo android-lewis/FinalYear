@@ -12,6 +12,7 @@ from pathlib import Path
 import uuid
 import hashlib
 import os
+import random
 
 image = Blueprint('image', __name__)
 
@@ -60,7 +61,8 @@ def generateImage():
     Path(f"api/images/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
     current_app.logger.debug(data)
     image_id = uuid.uuid4()
-    new_image = Image(image_id=image_id, owner_id=owner_id, file_location=f"/images/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()))
+    image = random.choice(os.listdir("./api/images/test/"))
+    new_image = Image(image_id=image_id, owner_id=owner_id, file_location=f"{image}", name=str(uuid.uuid4()))
 
     db.session.add(new_image)
     db.session.commit()

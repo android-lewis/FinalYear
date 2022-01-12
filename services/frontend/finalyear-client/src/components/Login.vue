@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import global from "../composables/global.ts";
+import global from "../composables/global";
 import axios from "axios";
 
 @Options({})
@@ -42,7 +42,7 @@ export default class LoginComponent extends Vue {
     password: HTMLInputElement
   };
 
-  passEmpty!: bool = true;
+  passEmpty: boolean = true;
 
   changePass(){
     console.log(this.$refs.password.value);

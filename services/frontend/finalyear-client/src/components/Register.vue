@@ -38,7 +38,9 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import global from "../composables/global";
 import axios from "axios";
+import router from "@/router";
 
 @Options({})
 
@@ -50,7 +52,7 @@ export default class Register extends Vue {
     password: HTMLInputElement
   }
 
-  passEmpty!: bool = true;
+  passEmpty: boolean = true;
 
   changePass(){
     console.log(this.$refs.password.value);
@@ -88,6 +90,7 @@ export default class Register extends Vue {
         console.log(response.data.value.user_id);
         sessionStorage.setItem('token', response.data.token);
         sessionStorage.setItem('id', response.data.value.user_id);
+        router.push('/');
     })
     .catch(function(){
         console.log('FAILURE!!');
