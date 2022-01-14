@@ -91,6 +91,11 @@ class Gallery(db.Model):
     visibility = db.Column(db.Boolean(), default=True, nullable=False)
     images = db.relationship('Image', backref="images_in_gallery", lazy=True)
 
+    def __init__(self, owner_id, name, visibility):
+        self.owner_id = owner_id
+        self.name = name
+        self.visibility = visibility
+
 @dataclass
 class LikedImage(db.Model):
     __tablename__ = "liked_image"

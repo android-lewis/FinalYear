@@ -22,31 +22,24 @@ def images():
 
 @image.route("/get")
 def getImage():
-    if not request.is_json:
-        return jsonify(message="Missing JSON in request"), 400
+    if 'imageid' not in request.args:
+        return jsonify(message="Please supply imageid"), 422
     
-    data = request.get_json()
-    if 'image_id' not in data:
-        return jsonify(message="Please supply image_id"), 422
-    
-    current_app.logger.debug(data)
-    return jsonify(message=f"Returing user with ID {data['image_id']}", value=Image.query.filter_by(image_id=data['image_id']).first()), 200
+    return jsonify(message=f"Returing user with ID {request.args['imageid']}", value=Image.query.filter_by(image_id=request.args['imageid']).first()), 200
 
-@image.route("/author", methods=["POST"])
+@image.route("/author")
 def imagesByAuthor():
-    data = request.get_json()
-    if 'owner_id' not in data:
-        return jsonify(message="Please supply owner_id"), 422
+    if 'ownerid' not in request.args:
+        return jsonify(message="Please supply ownerid"), 422
     
-    return jsonify(value=Image.query.filter_by(owner_id=data['owner_id'])), 200
+    return jsonify(value=Image.query.filter_by(owner_id=request.args['ownerid']).all()), 200
 
-@image.route("/gallery", methods=["POST"])
+@image.route("/gallery")
 def imagesByGallery():
-    data = request.get_json()
-    if 'gallery_id' not in data:
-        return jsonify(message="Please supply gallery_id"), 422
+    if 'galleryid' not in request.args:
+        return jsonify(message="Please supply galleryid"), 422
     
-    return jsonify(value=Image.query.filter_by(gallery_id=data['gallery_id'])), 200
+    return jsonify(value=Image.query.filter_by(gallery_id=request.args['galleryid']).all()), 200
 
 @image.route("/generate", methods=["POST"])
 def generateImage():
@@ -69,7 +62,7 @@ def generateImage():
 
     return jsonify(message="Image Created", value=new_image)
 
-@image.route("/modify", methods=["POST"])
+@image.route("/modify", methods=["PATCH"])
 def modifyImage():
     if not request.is_json:
         return jsonify(message="Missing JSON in request"), 400
@@ -94,7 +87,9 @@ def modifyImage():
     
     current_app.logger.debug(f"After update: {cur_image}")
     
-    return jsonify(message=f"Returing image with ID {image_id}", value=Image.query.filter_by(image_id=image_id).first()), 200
+    db.session.commit()
+    
+    return jsonify(message=f"Returing image with ID {image_id}", value=cur_image), 200
 
 @image.route("/upload", methods=["POST"])
 def imageUpload():
@@ -104,7 +99,7 @@ def imageUpload():
         return jsonify(message="Missing owner arg in request"), 400
     
     dir_name = hashlib.md5(str(request.args['owner']).encode())
-    Path(f"api/images/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
+    Path(f"api/images/uploaded/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
     
     uploaded_file = request.files['file']
     filename = secure_filename(uploaded_file.filename)
@@ -115,11 +110,23 @@ def imageUpload():
         
         image_id = uuid.uuid4()
         
-        uploaded_file.save(f"api/images/{dir_name.hexdigest()}/{image_id}{file_ext}")
+        uploaded_file.save(f"api/images/uploaded/{dir_name.hexdigest()}/{image_id}{file_ext}")
         new_image = Image(image_id=image_id, owner_id=request.args['owner'], file_location=f"/images/{dir_name.hexdigest()}/{image_id}{file_ext}", name=str(uuid.uuid4()))
     
     db.session.add(new_image)
     db.session.commit()
 
     return jsonify(message="Image Uploaded", value=new_image)
+
+@image.route("/delete", methods=["DELETE"])
+def deleteImage():
+    if 'imageid' not in request.args:
+        return jsonify(message="Missing owner arg in request"), 400
+    
+    cur_img = Image.query.filter_by(image_id=request.args['imageid']).first()
+
+    db.session.delete(cur_img)
+    db.session.commit()
+
+    return jsonify(message="Image Deleted", value=cur_img)
         
