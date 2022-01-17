@@ -4,7 +4,8 @@ const state = reactive({
     register: false,
     isAuth: false,
     uploadImageURL: "",
-    genImageURL: ""
+    genImageURL: "",
+    showModal: false,
 });
 
 const setAuth = function(){
@@ -23,4 +24,8 @@ const flip_register = function() {
     state.register = !state.register;
 };
 
-export default { state: readonly(state), flip_register, setUploadImageURL, setGenImageURL, setAuth };
+const show_modal = function(){
+    state.showModal = !state.showModal;
+}
+
+export default { state: readonly(state), flip_register, setUploadImageURL, setGenImageURL, setAuth, show_modal };

@@ -9,16 +9,24 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import LoginComponent from "@/components/Login.vue";
+import LoginModal from "@/components/modals/LoginModal.vue";
 import Register from "@/components/Register.vue";
 import global from "../composables/global";
 
 @Options({
   components: {
     LoginComponent,
+    LoginModal,
     Register
   },
 })
 export default class Login extends Vue {
+
+  get isShown(){
+    const { show_modal } = global;
+    show_modal();
+    return true
+  }
 
   get reg(){
     const { state } = global;

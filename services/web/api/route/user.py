@@ -6,9 +6,11 @@ from flask import (
 )
 
 from api.model.data_spec import User
-from .. import db
+from .. import db, mail
 
+import jwt
 import uuid
+import datetime
 
 user = Blueprint('user', __name__)
 
@@ -71,7 +73,8 @@ def login():
     if not user or not user.check_password(password):
         return jsonify(token="none", message="Login failed"), 401
     
-    return jsonify(token=uuid.uuid4(), message="Login Success"), 200
+    token = jwt.encode({'user_id': user.user_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, current_app.config['SECRET_KEY'], algorithm="HS256")
+    return jsonify(token=token, message="Login Success"), 200
 
 @user.route("/register", methods=["POST"])
 def register():
@@ -99,4 +102,4 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify(token=uuid.uuid4(), message="User Registered", value=new_user), 200
+    return jsonify(message="User Registered", value=new_user), 200

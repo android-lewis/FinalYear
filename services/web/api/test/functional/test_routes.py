@@ -1,5 +1,8 @@
+"""
+User Route Tests
+"""
 
-def test_home_page_with_fixture(test_client):
+def test_get_all_users(test_client):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/' page is requested (GET)
