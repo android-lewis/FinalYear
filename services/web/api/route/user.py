@@ -5,6 +5,7 @@ from flask import (
     current_app
 )
 
+from flask_mail import Message
 from api.model.data_spec import User
 from .. import db, mail
 
@@ -63,6 +64,15 @@ def login():
     
     data = request.get_json()
     keys = ['email', 'password']
+
+    msg = Message(
+        'Hello',
+        sender='abstract.styler@gmail.com',
+        recipients = ['lewisbaston2@gmail.com']
+    )
+    
+    msg.body = 'Test from Flask'
+    mail.send(msg)
 
     if not all(key in data for key in keys):
         return jsonify(message="Please supply all required fields"), 422

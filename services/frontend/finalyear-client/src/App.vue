@@ -4,10 +4,10 @@
       <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/gallery" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/image-nav.svg" alt="Image Icon for Gallery Page"/></router-link></div>
       <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/camera-nav.svg" alt="Camera Icon for Home Page"/></router-link></div>
       <div class="h-full p-6 hover:bg-zinc-600 transition duration-500">
-        <router-link v-if="!isAuth" to="/login" class="text-orange-600 text-lg font-body font-medium">
+        <router-link v-show="!determineAuth" to="/login" class="text-orange-600 text-lg font-body font-medium">
           <img src="./assets/nav-items/user-nav.svg" alt="Profile Icon for Login Page"/>
         </router-link>
-        <router-link v-else-if="isAuth" to="/account" class="text-orange-600 text-lg font-body font-medium">
+        <router-link v-show="determineAuth" to="/account" class="text-orange-600 text-lg font-body font-medium">
           <img src="./assets/nav-items/user-nav.svg" alt="Profile Icon for Account Page"/>
         </router-link>
       </div>
@@ -23,7 +23,7 @@ import global from "@/composables/global";
 @Options({})
 export default class App extends Vue {
 
-  isAuth(){
+  public determineAuth(): Boolean {
     const { state } = global;
     return state.isAuth;
   }

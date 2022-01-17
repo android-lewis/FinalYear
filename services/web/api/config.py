@@ -8,10 +8,10 @@ class Config(object):
     STATIC_FOLDER = f"{os.getenv('APP_FOLDER')}/api/static"
     MEDIA_FOLDER = f"{os.getenv('APP_FOLDER')}/api/images"
     SECRET_KEY = os.getenv('SECRET_KEY')
-    MAIL_SERVER='smtp.gmail.com'
+    MAIL_SERVER="smtp.gmail.com"
     MAIL_PORT = 465
-    MAIL_USERNAME = 'abstract.styler@gmail.com'
-    MAIL_PASSWORD = '9FvVs4xW!!'
+    MAIL_USERNAME = "abstract.styler@gmail.com"
+    MAIL_PASSWORD = "9FvVs4xW!!"
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 

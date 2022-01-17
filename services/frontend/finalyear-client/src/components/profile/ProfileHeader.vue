@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import axios from "axios";
-import global from "../composables/global";
+import global from "../../composables/global";
 
 @Options({})
 export default class ProfileHeader extends Vue {

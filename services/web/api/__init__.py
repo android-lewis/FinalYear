@@ -20,14 +20,9 @@ def create_app(config_string='api.config.Config'):
     
     # Initialise our DB
     db.init_app(app)
-    mail = Mail(app)
-    msg = Message(
-        'Hello',
-        sender='abstract.styler@gmail.com',
-        recipients = ['receiver’lewisbaston2@gmail.com']
-    )
-    msg.body = 'Test from Flask'
-    mail.send(msg)
+    # Init the mail server
+    mail.init_app(app)
+
     # Register blueprint routes
     from api.route.image import image
     app.register_blueprint(image, url_prefix='/image')
