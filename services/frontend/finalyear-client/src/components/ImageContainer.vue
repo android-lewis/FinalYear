@@ -1,10 +1,12 @@
 <template>
   <div class="max-w-full aspect-square bg-gray-200">
     <template v-if="currentRole === 'upload' && uploadImgPath != ''">
-      <img v-if="uploadImgPath != ''" :src="uploadImgPath" class="object-cover w-full h-auto" alt="uploaded image"/>
+      <label for="upload-photo" class="w-full h-full flex items-center justify-center"><img v-if="uploadImgPath != ''" :src="uploadImgPath" class="object-cover w-full h-auto" alt="uploaded image"/></label>
+      <input ref="fileInput" type="file" name="photo" id="upload-photo" v-on:change="handleFileUpload" />
     </template>
     <template v-else-if="currentRole === 'gen' && genImgPath != ''">
       <img v-if="genImgPath != ''" :src="genImgPath" class="object-cover w-full h-auto" alt="generated image"/>
+      <button v-on:click="genNewImage">Generate</button>
     </template>
     <template v-else-if="uploadImgPath === '' && currentRole === 'upload'">
       <label for="upload-photo" class="w-full h-full flex items-center justify-center hover:bg-gray-300 transition duration-500"><img :src="uploadIconPath" class="object-contain w-[25%] h-auto" alt="Upload image icon" /></label>
@@ -60,18 +62,14 @@ export default class ImageContainer extends Vue {
   genNewImage() {
     const { setGenImageURL } = global;
     let file_location = "";
-    let data = {
-      "owner_id": "1"
-    };
 
     axios.post('/api/image/generate', 
-    data, {
+    {
     headers: {
         'Content-Type': 'application/json'
     }
     }).then(function(response) {
-        console.log(response.data.value.file_location);
-        setGenImageURL("/images/test/" + response.data.value.file_location);
+        setGenImageURL(response.data.value);
     })
     .catch(function(){
         console.log('FAILURE!!');
@@ -97,17 +95,12 @@ export default class ImageContainer extends Vue {
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        params: {
-          'owner': '1'
+          'Content-Type': 'multipart/form-data',
         }
       }).then((response) => {
-            //this.imgSrc = response.data
             console.log("SUCCESS!!");
-            //console.log(response);
-            console.log(response.data.value.file_location);
-            setUploadImageURL(response.data.value.file_location);
+            console.log(response.data);
+            setUploadImageURL(response.data.value);
         })
         .catch(function(){
           console.log('FAILURE!!');

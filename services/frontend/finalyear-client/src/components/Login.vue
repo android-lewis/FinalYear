@@ -33,6 +33,7 @@
 import { Options, Vue } from "vue-class-component";
 import global from "../composables/global";
 import axios from "axios";
+import router from "@/router";
 
 @Options({})
 
@@ -74,6 +75,8 @@ export default class LoginComponent extends Vue {
     }
     }).then(function(response) {
         console.log(response.data);
+        sessionStorage.setItem('token', response.data.token);
+        router.push('/');
     })
     .catch(function(){
         console.log('FAILURE!!');

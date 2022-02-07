@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Account",
 
     component: () =>
-      import("../views/Account.vue"),
+      import("../views/AccountLogin.vue"),
   },
   {
     path: "/login",

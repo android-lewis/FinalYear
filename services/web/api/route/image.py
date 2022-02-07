@@ -8,13 +8,13 @@ from flask import (
 from werkzeug.utils import secure_filename
 from api.model.data_spec import Image
 from api.helper.auth import token_required
+import api.gan.infer as infer
 from .. import db
 from pathlib import Path
 
 import uuid
 import hashlib
 import os
-import random
 
 image = Blueprint('image', __name__)
 
@@ -44,20 +44,13 @@ def imagesByGallery():
     return jsonify(value=Image.query.filter_by(gallery_id=request.args['galleryid']).all()), 200
 
 @image.route("/generate", methods=["POST"])
-@token_required
-def generateImage(current_user):
-    owner_id = current_user.user_id
+def generateImage(): 
+    image_name = infer.generate()
     
-    dir_name = hashlib.md5(str(owner_id).encode())
-    Path(f"api/images/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
-    image_id = uuid.uuid4()
-    image = random.choice(os.listdir("./api/images/test/"))
-    new_image = Image(image_id=image_id, owner_id=owner_id, file_location=f"{image}", name=str(uuid.uuid4()))
-
-    db.session.add(new_image)
-    db.session.commit()
-
-    return jsonify(message="Image Created", value=new_image)
+    Path(f"api/images/generated/").mkdir(parents=True, exist_ok=True)
+    file_location=f"/images/generated/{image_name}"
+    
+    return jsonify(message="Image Generated", value=file_location)
 
 @image.route("/modify", methods=["PATCH"])
 @token_required
@@ -91,13 +84,12 @@ def modifyImage(current_user):
     return jsonify(message=f"Returing image with ID {image_id}", value=cur_image), 200
 
 @image.route("/upload", methods=["POST"])
-@token_required
-def imageUpload(current_user):
+def imageUpload():
     if 'file' not in request.files:
         return jsonify(message="Missing file data in request"), 400
     
-    dir_name = hashlib.md5(str(current_user.user_id).encode())
-    Path(f"api/images/uploaded/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
+    #dir_name = hashlib.md5(str(current_user.user_id).encode())
+    #Path(f"api/images/uploaded/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
     
     uploaded_file = request.files['file']
     filename = secure_filename(uploaded_file.filename)
@@ -108,15 +100,16 @@ def imageUpload(current_user):
         
         image_id = uuid.uuid4()
         
-        uploaded_file.save(f"api/images/uploaded/{dir_name.hexdigest()}/{image_id}{file_ext}")
-        new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/uploaded/{dir_name.hexdigest()}/{image_id}{file_ext}", name=str(uuid.uuid4()))
+        new_file = f"/images/uploaded/{image_id}{file_ext}"
+        uploaded_file.save(f"api/images/uploaded/{image_id}{file_ext}")
+        #new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/uploaded/{dir_name.hexdigest()}/{image_id}{file_ext}", name=str(uuid.uuid4()))
     
-    current_app.logger.info(f"User {current_user.user_id} uploaded image with ID {new_image.image_id}")
+    #current_app.logger.info(f"User {current_user.user_id} uploaded image with ID {new_image.image_id}")
 
-    db.session.add(new_image)
-    db.session.commit()
+    #db.session.add(new_image)
+    #db.session.commit()
 
-    return jsonify(message="Image Uploaded", value=new_image)
+    return jsonify(message="Image Uploaded", value=new_file)
 
 @image.route("/save", methods=["POST"])
 @token_required

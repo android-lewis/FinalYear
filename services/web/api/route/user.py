@@ -64,7 +64,7 @@ def login():
     
     data = request.get_json()
     keys = ['email', 'password']
-
+    """
     msg = Message(
         'Hello',
         sender='abstract.styler@gmail.com',
@@ -73,7 +73,8 @@ def login():
     
     msg.body = 'Test from Flask'
     mail.send(msg)
-
+    
+    """
     if not all(key in data for key in keys):
         return jsonify(message="Please supply all required fields"), 422
     

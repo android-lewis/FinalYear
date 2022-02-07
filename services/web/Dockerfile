@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.10.1-bullseye
+FROM python:3.7.9-slim
 
 # create dir for app user
 RUN mkdir -p /home/app
@@ -23,9 +23,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends netcat
 
 # install dependencies
-RUN pip install --upgrade pip
+RUN pip install --no-cache --upgrade pip==21.3.1 -i https://pypi.org/simple/
 COPY ./requirements.txt $APP_HOME
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt && pip install torch==1.10.2+cpu torchvision==0.11.3+cpu torchaudio==0.10.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 
 # copy project
 COPY . $APP_HOME

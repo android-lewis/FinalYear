@@ -86,11 +86,8 @@ export default class Register extends Vue {
             'Content-Type': 'application/json'
         }
     }).then(function(response) {
-        console.log(response.data.token);
-        console.log(response.data.value.user_id);
-        sessionStorage.setItem('token', response.data.token);
-        sessionStorage.setItem('id', response.data.value.user_id);
-        router.push('/');
+        console.log(response.data);
+        router.push('/account');
     })
     .catch(function(){
         console.log('FAILURE!!');
