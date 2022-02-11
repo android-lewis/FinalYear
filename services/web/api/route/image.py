@@ -15,6 +15,7 @@ from pathlib import Path
 import uuid
 import hashlib
 import os
+import urllib
 
 image = Blueprint('image', __name__)
 
@@ -114,26 +115,17 @@ def imageUpload():
 @image.route("/save", methods=["POST"])
 @token_required
 def saveImage(current_user):
-    if 'file' not in request.files:
-        return jsonify(message="Missing file data in request"), 400
     
     dir_name = hashlib.md5(str(current_user.user_id).encode())
     Path(f"api/images/combined/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
     
-    uploaded_file = request.files['file']
-    filename = secure_filename(uploaded_file.filename)
-    if filename != '':
-        file_ext = os.path.splitext(filename)[1]
-        if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
-            return jsonify(message="Image not accepted file type"), 400
-        
-        image_id = uuid.uuid4()
-        
-        uploaded_file.save(f"api/images/combined/{dir_name.hexdigest()}/{image_id}{file_ext}")
-        new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/combined/{dir_name.hexdigest()}/{image_id}{file_ext}", name=str(uuid.uuid4()))
-    
-    current_app.logger.info(f"User {current_user.user_id} saved image with ID {new_image.image_id}")
-    
+    uploaded_file = request.form.get('file')
+    uploaded_file = urllib.request.urlopen(uploaded_file)
+    image_id = uuid.uuid4()
+    with open(f'api/images/combined/{dir_name.hexdigest()}/{image_id}.png', 'wb') as f:
+        f.write(uploaded_file.file.read())
+
+    new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/combined/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()))
     db.session.add(new_image)
     db.session.commit()
 

@@ -95,11 +95,10 @@ export default class ImageContainer extends Vue {
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data'
         }
       }).then((response) => {
             console.log("SUCCESS!!");
-            console.log(response.data);
             setUploadImageURL(response.data.value);
         })
         .catch(function(){
