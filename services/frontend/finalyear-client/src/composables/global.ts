@@ -8,8 +8,8 @@ const state = reactive({
     showModal: false,
 });
 
-const setAuth = function(){
-    state.isAuth = !state.isAuth;
+const setAuth = function(loggedin:boolean){
+    state.isAuth = loggedin;
 };
 
 const setGenImageURL = function(url:string){

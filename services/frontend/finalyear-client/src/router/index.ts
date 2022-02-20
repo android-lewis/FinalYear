@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import AccountLogin from "../views/AccountLogin.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -10,9 +11,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/account",
     name: "Account",
-
-    component: () =>
-      import("../views/AccountLogin.vue"),
+    component: AccountLogin,
   },
   {
     path: "/login",
@@ -31,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
 

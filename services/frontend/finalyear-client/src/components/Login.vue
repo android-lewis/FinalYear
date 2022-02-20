@@ -59,13 +59,11 @@ export default class LoginComponent extends Vue {
   }
 
   handleLogin() {
-
+    const { setAuth } = global;
     const postData = {
         email: this.$refs.email.value,
         password: this.$refs.password.value
     }
-    
-    console.log(postData);
     
     axios.post('/api/user/login',
     postData,
@@ -76,7 +74,8 @@ export default class LoginComponent extends Vue {
     }).then(function(response) {
         console.log(response.data);
         sessionStorage.setItem('token', response.data.token);
-        router.push('/');
+        setAuth(true);
+        router.push("/");
     })
     .catch(function(){
         console.log('FAILURE!!');

@@ -1,7 +1,6 @@
 <template>
-<button v-on:click="determineAuth">Click Me</button>
-    <Account v-if="auth" />
-    <Login v-else/>
+  <Account v-if="auth" />
+  <Login v-else/>
 </template>
 
 <script lang="ts">
@@ -17,12 +16,6 @@ import Account from "@/views/Account.vue";
   },
 })
 export default class AccountLogin extends Vue {
-  auth: Boolean= false;
-
-  determineAuth() {
-    //const { state } = global;
-    this.auth = !this.auth;
-  }
-
+  auth: Boolean = global.state.isAuth;
 }
 </script>

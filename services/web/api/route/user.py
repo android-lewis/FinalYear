@@ -7,6 +7,7 @@ from flask import (
 
 from flask_mail import Message
 from api.model.data_spec import User
+from api.helper.auth import token_required
 from .. import db, mail
 
 import jwt
@@ -19,15 +20,10 @@ user = Blueprint('user', __name__)
 def GetAllUsers():
     return jsonify(message="Serving all users", value=User.query.all()), 200
 
-@user.route("/get", methods=["POST"])
-def GetUser():
-    if not request.is_json:
-        return jsonify(message="Missing JSON in request"), 400
-    
-    data = request.get_json()
-    user_id = data['user_id']
-    current_app.logger.debug(data)
-    return jsonify(message=f"Returing user with ID {user_id}", value=User.query.filter_by(user_id=user_id).first()), 200
+@user.route("/get")
+@token_required
+def GetUser(current_user):
+    return jsonify(message=f"Returing user with ID {current_user.user_id}", value=User.query.filter_by(user_id=current_user.user_id).first()), 200
 
 @user.route("/modify", methods=["POST"])
 def ModifyUser():

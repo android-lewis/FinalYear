@@ -5,9 +5,17 @@
       <ImageContainer role="gen" />
       
     </div>
-    <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
+    <!-- <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas> -->
     <button v-on:click="stylize" class="w-full">Combine</button>
-    <button v-on:click="saveStyled">Save Styled image</button>
+    <!-- <button v-on:click="saveStyled">Save Styled image</button> -->
+    <Modal v-show="modalVisible" @close="closeModal">
+      <template v-slot:body>
+        <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
+      </template>
+      <template v-slot:footer>
+          <button v-on:click="saveStyled">Save Styled image</button>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -16,6 +24,7 @@ import { Options, Vue } from "vue-class-component";
 import { toRaw } from "vue";
 import axios from 'axios';
 import ImageContainer from "@/components/ImageContainer.vue"; // @ is an alias to /src
+import Modal from "@/components/modal/Modal.vue";
 import * as mi from '@magenta/image';
 import global from "@/composables/global";
 const getCanvasRenderingContext2D = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
@@ -29,12 +38,15 @@ const getCanvasRenderingContext2D = (canvas: HTMLCanvasElement): CanvasRendering
 @Options({
   components: {
     ImageContainer,
+    Modal,
   },
 })
 export default class Home extends Vue {
   $refs!: {
     canvas: HTMLCanvasElement
   }
+
+  modalVisible:Boolean = false;
 
   model:any = new mi.ArbitraryStyleTransferNetwork();
 
@@ -59,6 +71,7 @@ export default class Home extends Vue {
         const ctx = getCanvasRenderingContext2D(this.$refs.canvas);
         if(ctx){
           ctx.putImageData(imageData, 0, 0);
+          this.showModal()
         }
       }
     })
@@ -83,7 +96,14 @@ export default class Home extends Vue {
         console.log('FAILURE!!');
         console.log(response)
     })
-    
   }
+
+  showModal() {
+    this.modalVisible = true;
+  };
+
+  closeModal() {
+    this.modalVisible = false;
+  };
 }
 </script>
