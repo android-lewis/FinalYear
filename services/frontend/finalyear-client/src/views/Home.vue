@@ -3,11 +3,8 @@
     <div class="container mx-auto space-y-2 lg:space-y-0 lg:gap-2 lg:grid lg:grid-cols-2">
       <ImageContainer role="upload" />
       <ImageContainer role="gen" />
-      
     </div>
-    <!-- <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas> -->
-    <button v-on:click="stylize" class="w-full">Combine</button>
-    <!-- <button v-on:click="saveStyled">Save Styled image</button> -->
+    <button v-on:click="stylize" class="w-full bg-orange-600 hover:bg-orange-400 text-white font-bold font-body py-4 px-4">Combine</button>
     <Modal v-show="modalVisible" @close="closeModal">
       <template v-slot:body>
         <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
@@ -47,7 +44,6 @@ export default class Home extends Vue {
   }
 
   modalVisible:Boolean = false;
-
   model:any = new mi.ArbitraryStyleTransferNetwork();
 
   stylize() {

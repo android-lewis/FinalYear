@@ -6,7 +6,10 @@
     </template>
     <template v-else-if="currentRole === 'gen' && genImgPath != ''">
       <img v-if="genImgPath != ''" :src="genImgPath" class="object-cover w-full h-auto" alt="generated image"/>
-      <button v-on:click="genNewImage">Generate</button>
+      <div class="flex justify-start gap-2">
+        <button v-on:click="genNewImage" class="bg-orange-600 hover:bg-orange-400 text-white w-full font-bold font-body py-4 px-4">Regenerate</button>
+        <button v-on:click="saveGenImage" class="bg-orange-600 hover:bg-orange-400 text-white w-full font-bold font-body py-4 px-4">Save</button>
+      </div>
     </template>
     <template v-else-if="uploadImgPath === '' && currentRole === 'upload'">
       <label for="upload-photo" class="w-full h-full flex items-center justify-center hover:bg-gray-300 transition duration-500"><img :src="uploadIconPath" class="object-contain w-[25%] h-auto" alt="Upload image icon" /></label>
@@ -61,7 +64,6 @@ export default class ImageContainer extends Vue {
 
   genNewImage() {
     const { setGenImageURL } = global;
-    let file_location = "";
 
     axios.post('/api/image/generate', 
     {
@@ -74,6 +76,26 @@ export default class ImageContainer extends Vue {
     .catch(function(){
         console.log('FAILURE!!');
     })
+  }
+
+  saveGenImage() {
+    let postData = {
+      src: this.genImgPath
+    }
+
+    axios.post('/api/image/saveGenerated', 
+    postData,
+    {
+      headers: {
+        "x-access-tokens": `${sessionStorage.getItem('token')}`
+      }
+    }).then((response) => {
+            console.log("SUCCESS!!");
+            console.log(response)
+        })
+        .catch(function(){
+          console.log('FAILURE!!');
+      })
   }
 
   get uploadIconPath() {

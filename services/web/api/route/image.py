@@ -15,6 +15,7 @@ from pathlib import Path
 import uuid
 import hashlib
 import os
+import shutil
 import urllib
 
 image = Blueprint('image', __name__)
@@ -35,14 +36,29 @@ def imagesByAuthor():
     if 'ownerid' not in request.args:
         return jsonify(message="Please supply ownerid"), 422
     
-    return jsonify(value=Image.query.filter_by(owner_id=request.args['ownerid']).all()), 200
+    return jsonify(value=Image.query.filter_by(owner_id=request.args['ownerid'], type="combined").all()), 200
 
 @image.route("/gallery")
 def imagesByGallery():
     if 'galleryid' not in request.args:
         return jsonify(message="Please supply galleryid"), 422
     
-    return jsonify(value=Image.query.filter_by(gallery_id=request.args['galleryid']).all()), 200
+    return jsonify(value=Image.query.filter_by(gallery_id=request.args['galleryid'], type="combined").all()), 200
+
+@image.route("/combined")
+@token_required
+def combinedImages(current_user):    
+    return jsonify(value=Image.query.filter_by(owner_id=current_user.user_id, type="combined").all()), 200
+
+@image.route("/generated")
+@token_required
+def generatedImages(current_user):    
+    return jsonify(value=Image.query.filter_by(owner_id=current_user.user_id, type="generated").all()), 200
+
+@image.route("/uploaded")
+@token_required
+def uploadedImages(current_user):    
+    return jsonify(value=Image.query.filter_by(owner_id=current_user.user_id, type="uploaded").all()), 200
 
 @image.route("/generate", methods=["POST"])
 def generateImage(): 
@@ -52,6 +68,31 @@ def generateImage():
     file_location=f"/images/generated/{image_name}"
     
     return jsonify(message="Image Generated", value=file_location)
+
+@image.route("/saveGenerated", methods=["POST"])
+@token_required
+def saveGen(current_user):
+    if not request.is_json:
+        return jsonify(message="Missing JSON in request"), 400
+
+    dir_name = hashlib.md5(str(current_user.user_id).encode())
+    Path(f"api/images/generated/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
+
+    data = request.get_json()
+    img_src = data["src"] if "src" in data else ""
+    image_id = uuid.uuid4()
+
+    if img_src == "":
+        current_app.logger.debug(data)
+        return jsonify(message="Please supply src"), 422
+
+    shutil.copy(f"api{img_src}", f"api/images/generated/{dir_name.hexdigest()}/{image_id}.png")
+
+    new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/generated/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()), type="generated")
+    db.session.add(new_image)
+    db.session.commit()
+
+    return jsonify(message="Generated Image Saved", value=new_image)
 
 @image.route("/modify", methods=["PATCH"])
 @token_required
@@ -112,6 +153,31 @@ def imageUpload():
 
     return jsonify(message="Image Uploaded", value=new_file)
 
+@image.route("/saveUploaded", methods=["POST"])
+@token_required
+def saveUploaded(current_user):
+    if not request.is_json:
+        return jsonify(message="Missing JSON in request"), 400
+
+    dir_name = hashlib.md5(str(current_user.user_id).encode())
+    Path(f"api/images/uploaded/{dir_name.hexdigest()}").mkdir(parents=True, exist_ok=True)
+
+    data = request.get_json()
+    img_src = data["src"] if "src" in data else ""
+    image_id = uuid.uuid4()
+
+    if img_src == "":
+        current_app.logger.debug(data)
+        return jsonify(message="Please supply src"), 422
+
+    shutil.copy(f"api{img_src}", f"api/images/uploaded/{dir_name.hexdigest()}/{image_id}.png")
+
+    new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/uploaded/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()), type="uploaded")
+    db.session.add(new_image)
+    db.session.commit()
+
+    return jsonify(message="Uploaded Image Saved", value=new_image)
+
 @image.route("/save", methods=["POST"])
 @token_required
 def saveImage(current_user):
@@ -125,7 +191,7 @@ def saveImage(current_user):
     with open(f'api/images/combined/{dir_name.hexdigest()}/{image_id}.png', 'wb') as f:
         f.write(uploaded_file.file.read())
 
-    new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/combined/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()))
+    new_image = Image(image_id=image_id, owner_id=current_user.user_id, file_location=f"/images/combined/{dir_name.hexdigest()}/{image_id}.png", name=str(uuid.uuid4()), type="combined")
     db.session.add(new_image)
     db.session.commit()
 

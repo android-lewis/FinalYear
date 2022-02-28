@@ -55,6 +55,7 @@ class Image(db.Model):
     created: str
     name: str
     description: str
+    type: str
     likes: ClassVar
 
     image_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -64,13 +65,15 @@ class Image(db.Model):
     created = db.Column(db.DateTime(), server_default=db.func.now())
     name = db.Column(db.String(128), index=True)
     description = db.Column(db.String(255))
+    type = db.Column(db.String(32))
     likes = db.relationship('LikedImage', backref="likes_on_image", lazy=True)
 
-    def __init__(self, image_id, owner_id, file_location, name):
+    def __init__(self, image_id, owner_id, file_location, name, type):
         self.image_id = image_id
         self.owner_id = owner_id
         self.file_location = file_location
         self.name = name
+        self.type = type
 
 
 @dataclass
@@ -82,6 +85,7 @@ class Gallery(db.Model):
     name: str
     description: str
     visibility: bool
+    thumbnail: str
     images: ClassVar
 
     gallery_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -89,6 +93,7 @@ class Gallery(db.Model):
     name = db.Column(db.String(32), index=True)
     description = db.Column(db.String(255))
     visibility = db.Column(db.Boolean(), default=True, nullable=False)
+    thumbnail = db.Column(db.String(128))
     images = db.relationship('Image', backref="images_in_gallery", lazy=True)
 
     def __init__(self, owner_id, name, visibility):
