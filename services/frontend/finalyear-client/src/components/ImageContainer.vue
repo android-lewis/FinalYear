@@ -1,14 +1,25 @@
 <template>
   <div class="max-w-full aspect-square bg-gray-200">
     <template v-if="currentRole === 'upload' && uploadImgPath != ''">
-      <label for="upload-photo" class="w-full h-full flex items-center justify-center"><img v-if="uploadImgPath != ''" :src="uploadImgPath" class="object-cover w-full h-auto" alt="uploaded image"/></label>
-      <input ref="fileInput" type="file" name="photo" id="upload-photo" v-on:change="handleFileUpload" />
+      <div class="w-full h-full flex items-center justify-center"><img v-if="uploadImgPath != ''" :src="uploadImgPath" class="object-cover w-full h-auto" alt="uploaded image"/></div>
+      <div class="grid sm:grid-cols-2 gap-4 my-5">
+        <div class="flex justify-start gap-2 col-span-1">
+          <label for="upload-photo" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4 flex justify-center">Re-Upload</label>
+          <button v-on:click="saveUplImage" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4">Save</button>
+        </div>
+        <div class="w-full col-span-1">
+          <input ref="fileInput" type="file" name="photo" id="upload-photo" v-on:change="handleFileUpload"/> 
+        </div>
+      </div>
     </template>
     <template v-else-if="currentRole === 'gen' && genImgPath != ''">
       <img v-if="genImgPath != ''" :src="genImgPath" class="object-cover w-full h-auto" alt="generated image"/>
-      <div class="flex justify-start gap-2">
-        <button v-on:click="genNewImage" class="bg-orange-600 hover:bg-orange-400 text-white w-full font-bold font-body py-4 px-4">Regenerate</button>
-        <button v-on:click="saveGenImage" class="bg-orange-600 hover:bg-orange-400 text-white w-full font-bold font-body py-4 px-4">Save</button>
+      <div class="grid sm:grid-cols-2 gap-4 my-5">
+        <div class="flex justify-start gap-2 col-span-1">
+          <button v-on:click="genNewImage" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4">Regenerate</button>
+          <button v-on:click="saveGenImage" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4">Save</button>
+        </div>
+        <div class="w-full col-span-1"></div>
       </div>
     </template>
     <template v-else-if="uploadImgPath === '' && currentRole === 'upload'">
@@ -127,6 +138,26 @@ export default class ImageContainer extends Vue {
           console.log('FAILURE!!');
       })
     }
+  }
+
+  saveUplImage() {
+    let postData = {
+      src: this.uploadImgPath
+    }
+
+    axios.post('/api/image/saveUploaded', 
+    postData,
+    {
+      headers: {
+        "x-access-tokens": `${sessionStorage.getItem('token')}`
+      }
+    }).then((response) => {
+            console.log("SUCCESS!!");
+            console.log(response)
+        })
+        .catch(function(){
+          console.log('FAILURE!!');
+      })
   }
 }
 </script>

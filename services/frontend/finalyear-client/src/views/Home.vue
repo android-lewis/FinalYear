@@ -4,7 +4,10 @@
       <ImageContainer role="upload" />
       <ImageContainer role="gen" />
     </div>
-    <button v-on:click="stylize" class="w-full bg-orange-600 hover:bg-orange-400 text-white font-bold font-body py-4 px-4">Combine</button>
+    <div class="container">
+      <input type="number" v-model="strength" />
+      <button v-on:click="stylize" class="w-full bg-orange-600 hover:bg-orange-400 text-white font-bold font-body py-6 px-auto text-2xl">Combine</button>
+    </div>
     <Modal v-show="modalVisible" @close="closeModal">
       <template v-slot:body>
         <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
@@ -43,6 +46,7 @@ export default class Home extends Vue {
     canvas: HTMLCanvasElement
   }
 
+  strength:number = 0.9;
   modalVisible:Boolean = false;
   model:any = new mi.ArbitraryStyleTransferNetwork();
 
@@ -53,14 +57,13 @@ export default class Home extends Vue {
   styleImage(){
     const {state} = global;
     let uploadImage = new Image(512,512);
-    
     let genImage = new Image(512,512);
     let raw_model = toRaw(this.model);
     
     uploadImage.src = state.uploadImageURL;
     genImage.src = state.genImageURL;
 
-    raw_model.stylize(uploadImage, genImage).then((imageData: any) => {
+    raw_model.stylize(uploadImage, genImage, this.strength).then((imageData: any) => {
       if(!(this.$refs.canvas instanceof HTMLCanvasElement)){
         throw new Error('The element is not a HTMLCanvasElement.');
       } else {

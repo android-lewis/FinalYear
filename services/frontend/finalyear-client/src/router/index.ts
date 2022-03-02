@@ -27,6 +27,13 @@ const routes: Array<RouteRecordRaw> = [
     component: () => 
       import("../views/Gallery.vue"),
   },
+  {
+    path: "/gallery/:type",
+    name: "User Gallery",
+    props: true,
+    component: () => 
+      import("../views/Gallery.vue"),
+  },
 ];
 
 const router = createRouter({
