@@ -30,22 +30,24 @@ export default class App extends Vue {
   refCount:number = 0;
 
   created() {
-      let { setLoading } = global;
+      let { state, setAuth } = global;
       axios.interceptors.request.use((config) => {
-        setLoading(true);
+        this.setLoading(true);
         return config;
       }, (error) => {
-        setLoading(false);
+        this.setLoading(false);
         return Promise.reject(error);
       });
 
       axios.interceptors.response.use((response) => {
-        setLoading(false);
+        this.setLoading(false);
         return response;
       }, (error) => {
-        setLoading(false);
+        this.setLoading(false);
         return Promise.reject(error);
       });
+
+
     }
 
     setLoading(loading:boolean){

@@ -11,8 +11,9 @@ from .. import db
 gallery = Blueprint('gallery', __name__, template_folder='route')
 
 @gallery.route("/")
-def getAllGalleries():
-    return jsonify(value=Gallery.query.all()), 200
+@token_required
+def getAllGalleries(current_user):
+    return jsonify(value=Gallery.query.filter_by(owner_id=current_user.user_id).all()), 200
 
 @gallery.route("/get")
 def getGallery():
@@ -40,7 +41,7 @@ def createGallery(current_user):
     if not all(key in data for key in keys):
         return jsonify(message="Please supply all required fields"), 422
 
-    owner_id = current_user.owner_id
+    owner_id = current_user.user_id
     name = data['name']
     visibility = data['visibility']
     
@@ -95,6 +96,6 @@ def deleteGallery(current_user):
         db.session.delete(cur_gal)
         db.session.commit()
 
-        return jsonify(message="Image Deleted", value=cur_gal)
+        return jsonify(message="Gallery Deleted", value=cur_gal)
     
     return jsonify(message="You do not own this gallery"), 401

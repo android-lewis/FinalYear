@@ -1,7 +1,7 @@
 <template>
-    <div class="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md col-span-1">
+    <div class="w-full bg-white border border-gray-200 shadow-md col-span-1">
     <a v-on:click="navigate">
-        <img class="rounded-t-lg" :src="thumbnail" alt="thumbnail" />
+        <img :src="thumbnail" alt="thumbnail" />
     </a>
     <div class="p-5">
         <a v-on:click="navigate">

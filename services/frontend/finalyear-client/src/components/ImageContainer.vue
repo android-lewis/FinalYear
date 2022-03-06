@@ -1,10 +1,10 @@
 <template>
-  <div class="max-w-full aspect-square bg-gray-200">
+  <div class="max-w-full aspect-square bg-white">
     <template v-if="currentRole === 'upload' && uploadImgPath != ''">
       <div class="w-full h-full flex items-center justify-center"><img v-if="uploadImgPath != ''" :src="uploadImgPath" class="object-cover w-full h-auto" alt="uploaded image"/></div>
       <div class="grid sm:grid-cols-2 gap-4 my-5">
         <div class="flex justify-start gap-2 col-span-1">
-          <label for="upload-photo" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4 flex justify-center">Re-Upload</label>
+          <label for="upload-photo" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4 flex justify-center">Upload</label>
           <button v-on:click="saveUplImage" class="bg-orange-600 hover:bg-orange-400 text-white w-[50%] font-bold font-body py-4 px-4">Save</button>
         </div>
         <div class="w-full col-span-1">
@@ -27,7 +27,11 @@
       <input ref="fileInput" type="file" name="photo" id="upload-photo" v-on:change="handleFileUpload" />
     </template>
     <template v-else-if="genImgPath === '' && currentRole === 'gen'">
-        <button v-on:click="genNewImage">Generate</button>
+    <div class="flex items-center justify-center w-full h-full bg-gradient-to-r from-orange-600 to-amber-500" v-on:click="genNewImage">
+        <h1 class="text-5xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
+              <span class="block xl:inline">GENERATE</span>
+        </h1>
+    </div>
     </template>
   </div>
 </template>

@@ -16,6 +16,6 @@ import Account from "@/views/Account.vue";
   },
 })
 export default class AccountLogin extends Vue {
-  auth: Boolean = global.state.isAuth;
+  auth: Boolean = sessionStorage.getItem('token') != undefined ? true : false;
 }
 </script>
