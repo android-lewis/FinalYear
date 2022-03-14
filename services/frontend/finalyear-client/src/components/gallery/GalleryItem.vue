@@ -4,7 +4,7 @@
         <div class="p-5 grid grid-cols-2">
             <h5 class="mb-2 text-md font-bold tracking-tight text-gray-900 col-span-1">{{title}}</h5>
             <div class="col-span-1 flex justify-end">
-                <a v-if="type" v-on:click="addGallery" class="text-orange-600 text-md font-body font-medium"><img src="../../assets/gallery-items/plus.svg" alt="Add to Gallery Image"/></a>
+                <!--<a v-if="type" v-on:click="addGallery" class="text-orange-600 text-md font-body font-medium"><img src="../../assets/gallery-items/plus.svg" alt="Add to Gallery Image"/></a>-->
                 <a v-on:click="deleteImage" class="text-orange-600 text-md font-body font-medium"><img src="../../assets/gallery-items/delete.svg" alt="Delete Image"/></a>
             </div>
         </div>
@@ -16,7 +16,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
     name: "SavedImageContainer",
-    emits: ['refresh', 'gallery'],
+    emits: ['refresh', 'removeGallery'],
     props: {
         thumbnail: {
             type: String,
@@ -41,15 +41,15 @@ export default defineComponent({
         const id = props.id;
         const type = props.type;
         const deleteImage = () => {
-            axios.delete(`/api/image/delete?imageid=${id}`, { headers : { "x-access-tokens": `${sessionStorage.getItem('token')}` }}).then((response) => { console.log(response) }).catch((response) => { console.log(response)});
-            emit('refresh', true);
+            if(type){
+                axios.delete(`/api/image/delete?imageid=${id}`, { headers : { "x-access-tokens": `${sessionStorage.getItem('token')}` }}).then((response) => { console.log(response) }).catch((response) => { console.log(response)});
+                emit('refresh', true);
+            } else {
+                emit('removeGallery', id);
+            }
         }
 
-        const addGallery = () => {
-            emit('gallery', id);
-        }
-
-        return { thumbnail, title, type, deleteImage, addGallery }
+        return { thumbnail, title, type, deleteImage }
     }
 })
 </script>

@@ -34,10 +34,17 @@
     </div>
     <Modal v-show="modalVisible" @close="closeModal">
       <template v-slot:body>
-        <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
+        <div>
+          <div class="flex flex-row">
+            <canvas ref="canvas" id="combinedImg" height="512" width="512"></canvas>
+          </div>
+          <div>
+            <button v-on:click="downloadImage" class="w-full bg-orange-600 hover:bg-orange-400 text-white font-bold font-body py-6 px-auto text-2xl">Download Image</button>
+          </div>
+        </div>
       </template>
       <template v-slot:footer>
-          <button v-on:click="saveStyled">Save Styled image</button>
+          <button v-on:click="saveStyled" class="w-full bg-orange-600 hover:bg-orange-400 text-white font-bold font-body py-6 px-auto text-2xl">Save Styled image</button>
       </template>
     </Modal>
   </div>
@@ -53,6 +60,8 @@ import ImageContainer from "@/components/ImageContainer.vue"; // @ is an alias t
 import Modal from "@/components/modal/Modal.vue";
 import * as mi from '@magenta/image';
 import global from "@/composables/global";
+import { saveAs } from "file-saver";
+
 const getCanvasRenderingContext2D = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
     const context = canvas.getContext('2d');
     if (context === null) {
@@ -141,6 +150,12 @@ export default class Home extends Vue {
         console.log('FAILURE!!');
         console.log(response)
     })
+  }
+
+  downloadImage() {
+    this.$refs.canvas.toBlob(function(blob) {
+      saveAs(blob as Blob, 'combined-image.png');
+    });
   }
 
   showModal() {

@@ -87,7 +87,7 @@ export default class Register extends Vue {
         }
     }).then(function(response) {
         console.log(response.data);
-        router.push('/account');
+        router.replace('/account');
     })
     .catch(function(){
         console.log('FAILURE!!');

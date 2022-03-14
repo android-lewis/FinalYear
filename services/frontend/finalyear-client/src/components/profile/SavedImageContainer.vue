@@ -31,7 +31,7 @@ export default defineComponent({
         const title = props.title;
 
         const navigate = () => {
-            router.push(`/gallery/${title}`)
+            router.replace(`/gallery/${title}`)
         }
         return { thumbnail, title, navigate }
     }

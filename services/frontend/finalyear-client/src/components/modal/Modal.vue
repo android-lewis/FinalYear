@@ -2,8 +2,8 @@
   <div class="modal-backdrop">
     <div class="modal">
       <header class="modal-header">
-        <slot name="header">
-          This is the default title!
+        <slot name="header" class="text-black font-bold font-body py-6 px-auto text-2xl">
+          Attention
         </slot>
         <button
           type="button"
@@ -23,12 +23,6 @@
         <slot name="footer">
           This is the default footer!
         </slot>
-        <button
-          type="button"
-          class="btn-green"
-          v-on:click="close">
-          Close Modal
-        </button>
       </footer>
     </div>
   </div>
@@ -64,7 +58,6 @@
   .modal-header {
     position: relative;
     border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
     justify-content: space-between;
   }
 
@@ -88,7 +81,7 @@
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
-    color: #4AAE9B;
+    color: black;
     background: transparent;
   }
 

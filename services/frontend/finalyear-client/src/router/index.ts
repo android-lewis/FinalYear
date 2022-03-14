@@ -21,11 +21,11 @@ const routes: Array<RouteRecordRaw> = [
       import("../views/Login.vue"),
   },
   {
-    path: "/gallery",
-    name: "Gallery",
+    path: "/showcase",
+    name: "Showcase",
 
     component: () => 
-      import("../views/Gallery.vue"),
+      import("../views/Showcase.vue"),
   },
   {
     path: "/gallery/:type",

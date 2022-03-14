@@ -56,7 +56,7 @@ export default class ProfileHeader extends Vue {
     const {setAuth} = global;
     setAuth(false);
     sessionStorage.removeItem('token');
-    router.push("/");
+    router.replace("/");
   }
 }
 </script>

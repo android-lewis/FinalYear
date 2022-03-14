@@ -6,7 +6,7 @@
     <div class="p-5 grid grid-cols-2">
         <h5 class="mb-2 text-md font-bold tracking-tight text-gray-900 col-span-1">{{title}}</h5>
         <div class="col-span-1 flex justify-end">
-            <a v-on:click="deleteGallery" class="text-orange-600 text-md font-body font-medium"><img src="../../assets/gallery-items/delete.svg" alt="Delete Image"/></a>
+            <a v-if="controls" v-on:click="deleteGallery" class="text-orange-600 text-md font-body font-medium"><img src="../../assets/gallery-items/delete.svg" alt="Delete Image"/></a>
         </div>
     </div>
 </div>
@@ -31,12 +31,18 @@ export default defineComponent({
         id: {
             type: String,
             required: true,
+        },
+        controls: {
+            type: Boolean,
+            required: true,
+            default: true,
         }
     },
     setup(props:any, { emit }) {
         const thumbnail = props.thumbnail;
         const title = props.title;
         const id = props.id;
+        const controls = props.controls;
 
         const deleteGallery = () => {
             axios.delete(`/api/gallery/delete?galleryid=${id}`, { headers : { "x-access-tokens": `${sessionStorage.getItem('token')}` }}).then((response) => { console.log(response) }).catch((response) => { console.log(response)});
@@ -44,10 +50,10 @@ export default defineComponent({
         }
 
         const navigate = () => {
-            router.push(`/gallery/${id}`);
+            router.replace(`/gallery/${id}`).then(() => { console.log("Replacing") });
         }
 
-        return { thumbnail, title, deleteGallery, navigate }
+        return { thumbnail, controls, title, deleteGallery, navigate }
     }
 })
 </script>

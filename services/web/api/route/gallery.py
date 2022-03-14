@@ -15,6 +15,10 @@ gallery = Blueprint('gallery', __name__, template_folder='route')
 def getAllGalleries(current_user):
     return jsonify(value=Gallery.query.filter_by(owner_id=current_user.user_id).all()), 200
 
+@gallery.route("/showcase")
+def getShowcaseGalleries():
+    return jsonify(value=Gallery.query.filter_by(visibility=True).all()), 200
+
 @gallery.route("/get")
 def getGallery():
     if 'galleryid' not in request.args:

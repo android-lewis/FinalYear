@@ -2,9 +2,10 @@
   <Loading v-model:active="isLoading"
                   can-cancel="false"
                   is-full-page="true"/>
+  <notifications position="top center"/>
   <nav class="sticky top-0 w-screen max-h-100 flex justify-around mx-auto bg-zinc-900">
     <div class="items-center flex flex-row flex-nowrap">
-      <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/gallery" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/image-nav.svg" alt="Image Icon for Gallery Page"/></router-link></div>
+      <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/showcase" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/image-nav.svg" alt="Image Icon for Gallery Page"/></router-link></div>
       <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/camera-nav.svg" alt="Camera Icon for Home Page"/></router-link></div>
       <div class="h-full p-6 hover:bg-zinc-600 transition duration-500"><router-link to="/account" class="text-orange-600 text-lg font-body font-medium"><img src="./assets/nav-items/user-nav.svg" alt="Profile Icon for Account Page"/></router-link>
       </div>
@@ -19,10 +20,12 @@ import global from "@/composables/global";
 import axios from "axios";
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import notifications from '@kyvg/vue3-notification'
 
 @Options({
   components: {
     Loading,
+    notifications
   }
 })
 export default class App extends Vue {

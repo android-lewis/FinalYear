@@ -75,7 +75,7 @@ export default class LoginComponent extends Vue {
         console.log(response.data);
         sessionStorage.setItem('token', response.data.token);
         setAuth(true);
-        router.push("/");
+        router.replace("/");
     })
     .catch(function(){
         console.log('FAILURE!!');
