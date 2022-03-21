@@ -1,4 +1,4 @@
-from api.model.data_spec import ( User, Image )
+from api.model.data_spec import ( User, Image, Gallery )
 from api import create_app
 import uuid
 import pytest
@@ -11,8 +11,13 @@ def new_user():
 
 @pytest.fixture(scope="module")
 def new_image():
-    image = Image(uuid.UUID('94c4131d-53b9-40ad-8948-7c1db0e61e0d'), 1, '/images/uploaded/test.png','Test Image')
+    image = Image(uuid.UUID('94c4131d-53b9-40ad-8948-7c1db0e61e0d'), 1, '/images/uploaded/test.png','Test Image', 'Generated')
     return image
+
+@pytest.fixture(scope="module")
+def new_gallery():
+    gallery = Gallery(1, "Test", 1)
+    return gallery
 
 @pytest.fixture(scope='module')
 def test_client():

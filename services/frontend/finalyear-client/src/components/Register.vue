@@ -40,7 +40,6 @@
 import { Options, Vue } from "vue-class-component";
 import global from "../composables/global";
 import axios from "axios";
-import router from "@/router";
 
 @Options({})
 
@@ -61,15 +60,12 @@ export default class Register extends Vue {
   }
 
   registerLoad() {
-    const { state, flip_register } = global;
-    console.log(state)
+    const { flip_register } = global;
     flip_register();
-    console.log(state)
   }
 
   handleRegister() {
-    console.log("Handling");
-
+    const { flip_register } = global;
     const postData = {
         f_name: this.$refs.fname.value,
         l_name: this.$refs.lname.value,
@@ -87,7 +83,7 @@ export default class Register extends Vue {
         }
     }).then(function(response) {
         console.log(response.data);
-        router.replace('/account');
+        flip_register();
     })
     .catch(function(){
         console.log('FAILURE!!');

@@ -56,6 +56,7 @@ def ModifyUser():
 @user.route("/login", methods=["POST"])
 def login():
     if not request.is_json:
+        current_app.logger.debug("Missing JSON in request")
         return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
@@ -72,12 +73,14 @@ def login():
     
     """
     if not all(key in data for key in keys):
+        current_app.logger.debug("Please supply all required fields")
         return jsonify(message="Please supply all required fields"), 422
     
     email = data['email']
     password = data['password']
     user = User.query.filter_by(email=email).first()
     if not user or not user.check_password(password):
+        current_app.logger.debug("Login failed")
         return jsonify(token="none", message="Login failed"), 401
     
     token = jwt.encode({'user_id': user.user_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, current_app.config['SECRET_KEY'], algorithm="HS256")
@@ -86,12 +89,14 @@ def login():
 @user.route("/register", methods=["POST"])
 def register():
     if not request.is_json:
+        current_app.logger.debug("Missing JSON in request")
         return jsonify(message="Missing JSON in request"), 400
     
     data = request.get_json()
     keys = ['f_name', 'l_name', 'email', 'password']
 
     if not all(key in data for key in keys):
+        current_app.logger.debug("Please supply all required fields")
         return jsonify(message="Please supply all required fields"), 422
     
     fName = data['f_name']
@@ -101,6 +106,7 @@ def register():
 
     user = User.query.filter_by(email=email).first()
     if user:
+        current_app.logger.debug("User already exists, please login")
         return jsonify(message="User already exists, please login"), 409
     
     new_user = User(fName=fName, lName=lName, email=email)

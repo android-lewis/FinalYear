@@ -22,3 +22,15 @@ def test_new_image_with_fixture(new_image):
     assert new_image.owner_id == 1
     assert new_image.file_location == '/images/uploaded/test.png'
     assert new_image.name == 'Test Image'
+    assert new_image.type == 'Generated'
+
+def test_new_gallery_with_fixture(new_gallery):
+    """
+    GIVEN a Galley model
+    WHEN a new Gallery is created
+    THEN check the owner_id, name and visibility are defined correctly
+    """
+
+    assert new_gallery.owner_id == 1
+    assert new_gallery.visibility == 1
+    assert new_gallery.name == 'Test'

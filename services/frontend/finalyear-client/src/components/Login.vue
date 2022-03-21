@@ -22,9 +22,6 @@
       <button v-on:click="registerLoad" class="bg-orange-600 hover:bg-orange-400 text-white w-full font-bold font-body py-4 px-4" type="button">
         Sign Up
       </button>
-      <a class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker font-body" href="#">
-        Forgot Password?
-      </a>
     </div>
 </div>
 </template>
@@ -38,9 +35,10 @@ import router from "@/router";
 @Options({})
 
 export default class LoginComponent extends Vue {
-  $refs!: {
+  declare $refs: {
     email: HTMLInputElement
     password: HTMLInputElement
+    alert: any
   };
 
   passEmpty: boolean = true;
@@ -77,8 +75,7 @@ export default class LoginComponent extends Vue {
         setAuth(true);
         router.replace("/");
     })
-    .catch(function(){
-        console.log('FAILURE!!');
+    .catch(function(response){
     })
 
   }

@@ -12702,6 +12702,11 @@ vscode-vue-languageservice@0.30.2:
     vscode-pug-languageservice "0.30.2"
     vscode-typescript-languageservice "0.30.2"
 
+vue-basic-alert@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vue-basic-alert/-/vue-basic-alert-1.1.0.tgz#19b40874d48ef3ae3e95f326d34e1309ed043f48"
+  integrity sha512-1HKqzZSNVaseGwfDQ0bZADESSbut0WII+xSDA8coYvYiVJe4kpSTGChvyztpnPKEQ97c/XCqurdqeKwP2bBzNg==
+
 vue-class-component@^8.0.0-0:
   version "8.0.0-rc.1"
   resolved "https://registry.npmjs.org/vue-class-component/-/vue-class-component-8.0.0-rc.1.tgz"
