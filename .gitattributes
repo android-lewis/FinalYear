@@ -1,0 +1,2 @@
+services/web/api/gan/checkpoints/critic.pth filter=lfs diff=lfs merge=lfs -text
+services/web/api/gan/checkpoints/generator.pth filter=lfs diff=lfs merge=lfs -text
