@@ -1,7 +1,7 @@
 import torch
 
 START_TRAIN_AT_IMG_SIZE = 512
-DATASET = '/home/lewis/winhome/Documents/ML Scripts/Dataset'
+DATASET = 'REPLACE WITH PATH TO DATASET' # https://www.kaggle.com/datasets/bryanb/abstract-art-gallery
 CHECKPOINT_GEN = "./generator.pth"
 CHECKPOINT_CRITIC = "./critic.pth"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
